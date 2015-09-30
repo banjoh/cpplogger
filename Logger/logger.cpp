@@ -1,4 +1,5 @@
 #include "logger.h"
+#include <mutex>
 
 using namespace std;
 
@@ -11,19 +12,23 @@ public:
     void log(string message);
 private:
     ostream& out;
+    // Protects concurrent writes to stream
+    std::mutex mutex;
 };
 
 void Logger::Impl::log(string message)
 {
-    out << message;
-}
-
-Logger::Logger(ostream& o)
-    : pimpl (new Impl(o))
-{
+    // Buffer will always be flushed by 'endl' to maintain order of log messages
+    // so there is no need to class flush explicitely
+    std::lock_guard<std::mutex> lock(mutex);
+    out << message << endl;
 }
 
 //Public API
+Logger::Logger(ostream& o)
+    : pimpl (new Impl(o))
+{}
+
 Logger::~Logger()
 {}
 

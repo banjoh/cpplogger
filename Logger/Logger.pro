@@ -17,8 +17,3 @@ SOURCES += logger.cpp
 
 HEADERS += logger.h\
         logger_global.h
-
-unix {
-    target.path = /usr/lib
-    INSTALLS += target
-}

@@ -13,7 +13,7 @@ using namespace std;
  */
 class LOGGERSHARED_EXPORT Logger
 {
-
+    friend class UnitTestsTest;
 public:
     Logger(ostream& o);
     ~Logger();
