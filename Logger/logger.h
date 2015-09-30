@@ -17,6 +17,10 @@ class LOGGERSHARED_EXPORT Logger
 {
     friend class UnitTestsTest;
 public:
+    /**
+     * @brief Create an instance of the logger class
+     * @param o: Stream to output logs into
+     */
     Logger(std::ostream& o) : pimpl (new Impl(o)){}
     ~Logger(){ pimpl.reset(); }
 
