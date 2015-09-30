@@ -23,6 +23,7 @@ void Impl::log(string message)
 {
     // Buffer will always be flushed by 'endl' to maintain order of log messages
     // so there is no need to class flush explicitely
-    std::lock_guard<std::mutex> lock(mutex);
+    mutex.lock();
     out << message << endl;
+    mutex.unlock();
 }
