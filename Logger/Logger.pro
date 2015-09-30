@@ -13,7 +13,8 @@ TEMPLATE = lib
 
 DEFINES += LOGGER_LIBRARY
 
-SOURCES += logger.cpp
+SOURCES += \
+    logger_impl.cpp
 
 HEADERS += logger.h\
         logger_global.h

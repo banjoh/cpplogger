@@ -4,8 +4,10 @@
 #include "logger_global.h"
 #include <iostream>
 #include <memory>
+#include <string>
+#include "logger_impl.cpp"
 
-using namespace std;
+template<class T>
 
 /**
  * @brief This is a logging class meant to write logs to an output stream
@@ -15,18 +17,45 @@ class LOGGERSHARED_EXPORT Logger
 {
     friend class UnitTestsTest;
 public:
-    Logger(ostream& o);
-    ~Logger();
+    Logger(std::ostream& o) : pimpl (new Impl(o)){}
+    ~Logger(){ pimpl.reset(); }
 
-    // API
-    void logInfo(string message);
-    void logWarning(string message);
-    void logError(string message);
-    void logDebug(string message);
+    /**
+     * @brief logging information. Logs contain an INFO: prefix before the message
+     * @param message Log message to show
+     */
+    void logInfo(const T& message) { log("INFO: " + to_string(message)); }
+
+    /**
+     * @brief logging warnings. Logs contain an WARN: prefix before the message
+     * @param message Log message to show
+     */
+    void logWarning(const T& message) { log("WARN: " + to_string(message)); }
+
+    /**
+     * @brief logging errors. Logs contain an ERROR: prefix before the message
+     * @param message Log message to show
+     */
+    void logError(const T& message) { log("ERROR: " + to_string(message)); }
+
+    /**
+     * @brief logging debug logs. Logs contain an DEBUG: prefix before the message
+     * @param message Log message to show
+     */
+    void logDebug(const T& message) { log("DEBUG: " + to_string(message)); }
 
 private:
-    class Impl;
-    unique_ptr<Impl> pimpl;
+    std::shared_ptr<Impl> pimpl;
+    void log(std::string msg)
+    {
+        pimpl->log(msg);
+    }
+    std::string to_string(const T& val)
+    {
+        std::stringstream ss;
+        ss << val << flush;
+        return ss.str();
+    }
 };
 
 #endif // LOGGER_H
